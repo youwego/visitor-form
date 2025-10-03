@@ -1,72 +1,40 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-  <meta charset="UTF-8" />
-  <title>来場者リスト登録</title>
-  <style>
-    body { font-family: sans-serif; padding: 20px; }
-    label { font-weight: bold; display: block; margin-top: 20px; }
-    input, textarea {
-      width: 100%; padding: 8px; margin-top: 5px;
-      box-sizing: border-box;
+<script>
+  function submitForm() {
+    const artist = document.getElementById("artist").value.trim();
+    const presale = document.getElementById("presale").value.trim();
+    const guest = document.getElementById("guest").value.trim();
+    const memo = document.getElementById("memo").value.trim();
+
+    if (!artist || !presale || !guest) {
+      alert("すべての必須項目を入力してください");
+      return;
     }
-    button {
-      margin-top: 20px; padding: 10px 20px; font-size: 16px;
-    }
-  </style>
-</head>
-<body>
-  <h2>来場者入力フォーム</h2>
-  <form id="form">
-    <label for="artist">アーティスト名（必須）</label>
-    <input type="text" id="artist" required />
 
-    <label for="presale">前売りの名前（改行またはカンマ区切り）</label>
-    <textarea id="presale" rows="4" required></textarea>
-
-    <label for="guest">ゲストの名前（改行またはカンマ区切り）</label>
-    <textarea id="guest" rows="4" required></textarea>
-
-    <label for="memo">備考（任意）</label>
-    <input type="text" id="memo" />
-
-    <button type="submit">送信</button>
-  </form>
-
-  <script>
-    document.getElementById("form").addEventListener("submit", function(e) {
-      e.preventDefault();
-      const artist = document.getElementById("artist").value.trim();
-      const presale = document.getElementById("presale").value.trim();
-      const guest = document.getElementById("guest").value.trim();
-      const memo = document.getElementById("memo").value.trim();
-
-      if (!artist || !presale || !guest) {
-        alert("すべての必須項目を入力してください");
-        return;
-      }
-
-      const endpoint = "https://script.google.com/macros/s/https://script.google.com/macros/s/AKfycby-EQXYdpkffyYD4z0o7HMmtOvh_5KwFZKgxDErTkZPn1KnYzmQBYrBzjGgBkKiEOyc/exec";
-
-      const params = new URLSearchParams({
-        artist: artist,
-        presale: presale,
-        guest: guest,
-        memo: memo
-      });
-
-      fetch(`${endpoint}?${params.toString()}`, {
-        method: "GET",
-        mode: "cors"
-      })
-      .then(response => {
-        if (!response.ok) throw new Error("Network response was not ok");
-        window.location.href = "thanks.html";
-      })
-      .catch((error) => {
-        alert("送信中にエラーが発生しました: " + error.message);
-      });
+    const params = new URLSearchParams({
+      artist,
+      presale,
+      guest,
+      memo
     });
-  </script>
-</body>
-</html>
+
+    const endpoint = "https://script.google.com/macros/s/AKfycby-EQXYdpkffyYD4z0o7HMmtOvh_5KwFZKgxDErTkZPn1KnYzmQBYrBzjGgBkKiEOyc/exec";
+
+    fetch(`${endpoint}?${params.toString()}`, {
+      method: "GET",
+    })
+    .then((res) => {
+      if (!res.ok) throw new Error("HTTP Error");
+      return res.json();
+    })
+    .then((data) => {
+      if (data.status === "success") {
+        window.location.href = "thanks.html";
+      } else {
+        throw new Error(data.message || "Unknown Error");
+      }
+    })
+    .catch((error) => {
+      alert("送信中にエラーが発生しました: " + error.message);
+    });
+  }
+</script>
