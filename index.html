@@ -46,10 +46,10 @@
       }
 
       const params = new URLSearchParams({
-        artist: artist,
-        presale: presale,
-        guest: guest,
-        memo: memo
+        artist,
+        presale,
+        guest,
+        memo
       });
 
       const endpoint = "https://script.google.com/macros/s/AKfycby-EQXYdpkffyYD4z0o7HMmtOvh_5KwFZKgxDErTkZPn1KnYzmQBYrBzjGgBkKiEOyc/exec";
@@ -57,9 +57,9 @@
       fetch(`${endpoint}?${params.toString()}`, {
         method: "GET",
       })
-      .then(() => {
-        alert("送信しました。スプレッドシートに反映されます。");
-        document.getElementById("form").reset();
+      .then((res) => {
+        if (!res.ok) throw new Error("HTTP Error");
+        window.location.href = "thanks.html";
       })
       .catch((error) => {
         alert("送信中にエラーが発生しました: " + error.message);
