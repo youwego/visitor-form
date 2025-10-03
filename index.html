@@ -30,11 +30,12 @@
     <label for="memo">備考（任意）</label>
     <input type="text" id="memo" />
 
-    <button type="button" onclick="submitForm()">送信</button>
+    <button type="submit">送信</button>
   </form>
 
   <script>
-    function submitForm() {
+    document.getElementById("form").addEventListener("submit", function(e) {
+      e.preventDefault();
       const artist = document.getElementById("artist").value.trim();
       const presale = document.getElementById("presale").value.trim();
       const guest = document.getElementById("guest").value.trim();
@@ -45,26 +46,27 @@
         return;
       }
 
-      const params = new URLSearchParams({
-        artist,
-        presale,
-        guest,
-        memo
-      });
+      const endpoint = "https://script.google.com/macros/s/https://script.google.com/macros/s/AKfycby-EQXYdpkffyYD4z0o7HMmtOvh_5KwFZKgxDErTkZPn1KnYzmQBYrBzjGgBkKiEOyc/exec";
 
-      const endpoint = "https://script.google.com/macros/s/AKfycby-EQXYdpkffyYD4z0o7HMmtOvh_5KwFZKgxDErTkZPn1KnYzmQBYrBzjGgBkKiEOyc/exec";
+      const params = new URLSearchParams({
+        artist: artist,
+        presale: presale,
+        guest: guest,
+        memo: memo
+      });
 
       fetch(`${endpoint}?${params.toString()}`, {
         method: "GET",
+        mode: "cors"
       })
-      .then((res) => {
-        if (!res.ok) throw new Error("HTTP Error");
+      .then(response => {
+        if (!response.ok) throw new Error("Network response was not ok");
         window.location.href = "thanks.html";
       })
       .catch((error) => {
         alert("送信中にエラーが発生しました: " + error.message);
       });
-    }
+    });
   </script>
 </body>
 </html>
