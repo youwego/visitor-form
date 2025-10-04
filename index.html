@@ -21,10 +21,10 @@
     <label for="artist">アーティスト名（必須）</label>
     <input type="text" id="artist" required />
 
-    <label for="presale">前売りの名前（改行またはカンマ区切り、x2対応）</label>
+    <label for="presale">前売りの名前（改行またはカンマ区切り）</label>
     <textarea id="presale" rows="4" required></textarea>
 
-    <label for="guest">ゲストの名前（改行またはカンマ区切り、x2対応）</label>
+    <label for="guest">ゲストの名前（改行またはカンマ区切り）</label>
     <textarea id="guest" rows="4" required></textarea>
 
     <label for="memo">備考（任意）</label>
@@ -47,21 +47,15 @@
 
       const params = new URLSearchParams({ artist, presale, guest, memo });
 
-      // ★最新デプロイURLをここに！
+      // ★ここに最新のGASデプロイURLを貼ってください！
       const endpoint = "https://script.google.com/macros/s/AKfycby-EQXYdpkffyYD4z0o7HMmtOvh_5KwFZKgxDErTkZPn1KnYzmQBYrBzjGgBkKiEOyc/exec";
 
       fetch(`${endpoint}?${params.toString()}`, {
         method: "GET",
-        mode: "cors"
-      })
-      .then(res => res.text())
-      .then(text => {
-        console.log("✅ GAS response:", text);
-        window.location.href = "thanks.html"; // 送信後サンクスページへ
-      })
-      .catch(error => {
-        alert("送信中にエラーが発生しました: " + error.message);
+        mode: "no-cors"  // ← GitHub PagesからのGETなので必要
       });
+
+      window.location.href = "thanks.html"; // サンクスページへ即遷移
     }
   </script>
 </body>
