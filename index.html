@@ -1,70 +1,33 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-  <meta charset="UTF-8" />
-  <title>来場者フォーム</title>
-  <style>
-    body { font-family: sans-serif; padding: 30px; }
-    label { font-weight: bold; display: block; margin-top: 20px; }
-    input, textarea {
-      width: 100%; padding: 10px; margin-top: 5px; font-size: 16px;
+<script>
+  document.getElementById("form").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const artist = document.getElementById("artist").value.trim();
+    const presale = document.getElementById("presale").value.trim();
+    const guest = document.getElementById("guest").value.trim();
+    const memo = document.getElementById("memo").value.trim();
+
+    if (!artist || !presale || !guest) {
+      alert("すべての必須項目を入力してください。");
+      return;
     }
-    button {
-      margin-top: 25px; padding: 10px 25px; font-size: 18px;
-    }
-  </style>
-</head>
-<body>
-  <h2>来場者情報 登録フォーム</h2>
-  <form id="form">
-    <label for="artist">アーティスト名（必須）</label>
-    <input type="text" name="artist" id="artist" required />
 
-    <label for="presale">前売り（改行またはカンマ区切り）</label>
-    <textarea name="presale" id="presale" rows="4" required></textarea>
+    const data = { artist, presale, guest, memo };
 
-    <label for="guest">ゲスト（改行またはカンマ区切り）</label>
-    <textarea name="guest" id="guest" rows="4" required></textarea>
-
-    <label for="memo">備考（任意）</label>
-    <input type="text" name="memo" id="memo" />
-
-    <button type="submit">送信する</button>
-  </form>
-
-  <script>
-    document.getElementById("form").addEventListener("submit", function(e) {
-      e.preventDefault();
-
-      const artist = document.getElementById("artist").value.trim();
-      const presale = document.getElementById("presale").value.trim();
-      const guest = document.getElementById("guest").value.trim();
-      const memo = document.getElementById("memo").value.trim();
-
-      if (!artist || !presale || !guest) {
-        alert("すべての必須項目を入力してください。");
-        return;
-      }
-
-      const data = { artist, presale, guest, memo };
-
-      fetch("https://script.google.com/macros/s/AKfycbzeOd9bQnNyah1eukOkbJOuagTVX6SSxL6ciWdD4jr6n2KHpPU0LneZJa6Vsgeu-xgt/exec", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data)
-      })
-      .then(res => res.json())
-      .then(res => {
-        if (res.status === "success") {
-          window.location.href = "thanks.html";
-        } else {
-          alert("送信エラー: " + res.message);
-        }
-      })
-      .catch(err => {
-        alert("通信エラー: " + err.message);
-      });
+    fetch("https://script.google.com/macros/s/AKfycbzeOd9bQnNyah1eukOkbJOuagTVX6SSxL6ciWdD4jr6n2KHpPU0LneZJa6Vsgeu-xgt/exec", {
+      method: "POST",
+      mode: "no-cors", // ← 重要：クロスドメイン制限を回避
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(data)
+    })
+    .then(() => {
+      // レスポンスは no-cors なので読めないが、送信成功したと仮定して遷移
+      window.location.href = "thanks.html";
+    })
+    .catch(err => {
+      alert("通信エラー: " + err.message);
     });
-  </script>
-</body>
-</html>
+  });
+</script>
