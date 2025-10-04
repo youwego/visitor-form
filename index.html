@@ -1,40 +1,68 @@
-<script>
-  function submitForm() {
-    const artist = document.getElementById("artist").value.trim();
-    const presale = document.getElementById("presale").value.trim();
-    const guest = document.getElementById("guest").value.trim();
-    const memo = document.getElementById("memo").value.trim();
-
-    if (!artist || !presale || !guest) {
-      alert("すべての必須項目を入力してください");
-      return;
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <title>来場者リスト登録</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    label { font-weight: bold; display: block; margin-top: 20px; }
+    input, textarea {
+      width: 100%; padding: 8px; margin-top: 5px;
+      box-sizing: border-box;
     }
+    button {
+      margin-top: 20px; padding: 10px 20px; font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+  <h2>来場者入力フォーム</h2>
+  <form id="form">
+    <label for="artist">アーティスト名（必須）</label>
+    <input type="text" id="artist" required />
 
-    const params = new URLSearchParams({
-      artist,
-      presale,
-      guest,
-      memo
-    });
+    <label for="presale">前売りの名前（改行またはカンマ区切り、x2対応）</label>
+    <textarea id="presale" rows="4" required></textarea>
 
-    const endpoint = "https://script.google.com/macros/s/AKfycby-EQXYdpkffyYD4z0o7HMmtOvh_5KwFZKgxDErTkZPn1KnYzmQBYrBzjGgBkKiEOyc/exec";
+    <label for="guest">ゲストの名前（改行またはカンマ区切り、x2対応）</label>
+    <textarea id="guest" rows="4" required></textarea>
 
-    fetch(`${endpoint}?${params.toString()}`, {
-      method: "GET",
-    })
-    .then((res) => {
-      if (!res.ok) throw new Error("HTTP Error");
-      return res.json();
-    })
-    .then((data) => {
-      if (data.status === "success") {
-        window.location.href = "thanks.html";
-      } else {
-        throw new Error(data.message || "Unknown Error");
+    <label for="memo">備考（任意）</label>
+    <input type="text" id="memo" />
+
+    <button type="button" onclick="submitForm()">送信</button>
+  </form>
+
+  <script>
+    function submitForm() {
+      const artist = document.getElementById("artist").value.trim();
+      const presale = document.getElementById("presale").value.trim();
+      const guest = document.getElementById("guest").value.trim();
+      const memo = document.getElementById("memo").value.trim();
+
+      if (!artist || !presale || !guest) {
+        alert("すべての必須項目を入力してください");
+        return;
       }
-    })
-    .catch((error) => {
-      alert("送信中にエラーが発生しました: " + error.message);
-    });
-  }
-</script>
+
+      const params = new URLSearchParams({ artist, presale, guest, memo });
+
+      // ★最新デプロイURLをここに！
+      const endpoint = "https://script.google.com/macros/s/AKfycby-EQXYdpkffyYD4z0o7HMmtOvh_5KwFZKgxDErTkZPn1KnYzmQBYrBzjGgBkKiEOyc/exec";
+
+      fetch(`${endpoint}?${params.toString()}`, {
+        method: "GET",
+        mode: "cors"
+      })
+      .then(res => res.text())
+      .then(text => {
+        console.log("✅ GAS response:", text);
+        window.location.href = "thanks.html"; // 送信後サンクスページへ
+      })
+      .catch(error => {
+        alert("送信中にエラーが発生しました: " + error.message);
+      });
+    }
+  </script>
+</body>
+</html>
