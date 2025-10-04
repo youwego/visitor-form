@@ -1,62 +1,34 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-  <meta charset="UTF-8" />
-  <title>来場者リスト登録</title>
-  <style>
-    body { font-family: sans-serif; padding: 20px; }
-    label { font-weight: bold; display: block; margin-top: 20px; }
-    input, textarea {
-      width: 100%; padding: 8px; margin-top: 5px;
-      box-sizing: border-box;
+<script>
+  document.getElementById("form").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const artist = document.getElementById("artist").value.trim();
+    const presale = document.getElementById("presale").value.trim();
+    const guest = document.getElementById("guest").value.trim();
+    const memo = document.getElementById("memo").value.trim();
+
+    if (!artist || !presale || !guest) {
+      alert("すべての必須項目を入力してください。");
+      return;
     }
-    button {
-      margin-top: 20px; padding: 10px 20px; font-size: 16px;
-    }
-  </style>
-</head>
-<body>
-  <h2>来場者入力フォーム</h2>
-  <form id="form">
-    <label for="artist">アーティスト名（必須）</label>
-    <input type="text" id="artist" required />
 
-    <label for="presale">前売りの名前（改行またはカンマ区切り）</label>
-    <textarea id="presale" rows="4" required></textarea>
+    const data = { artist, presale, guest, memo };
 
-    <label for="guest">ゲストの名前（改行またはカンマ区切り）</label>
-    <textarea id="guest" rows="4" required></textarea>
-
-    <label for="memo">備考（任意）</label>
-    <input type="text" id="memo" />
-
-    <button type="button" onclick="submitForm()">送信</button>
-  </form>
-
-  <script>
-    function submitForm() {
-      const artist = document.getElementById("artist").value.trim();
-      const presale = document.getElementById("presale").value.trim();
-      const guest = document.getElementById("guest").value.trim();
-      const memo = document.getElementById("memo").value.trim();
-
-      if (!artist || !presale || !guest) {
-        alert("すべての必須項目を入力してください");
-        return;
+    fetch("https://script.google.com/macros/s/AKfycbzeOd9bQnNyah1eukOkbJOuagTVX6SSxL6ciWdD4jr6n2KHpPU0LneZJa6Vsgeu-xgt/exec", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data)
+    })
+    .then(res => res.json())
+    .then(res => {
+      if (res.status === "success") {
+        window.location.href = "thanks.html";
+      } else {
+        alert("送信エラー: " + res.message);
       }
-
-      const params = new URLSearchParams({ artist, presale, guest, memo });
-
-      // ★ここに最新のGASデプロイURLを貼ってください！
-      const endpoint = "https://script.google.com/macros/s/AKfycbzeOd9bQnNyah1eukOkbJOuagTVX6SSxL6ciWdD4jr6n2KHpPU0LneZJa6Vsgeu-xgt/exec";
-
-      fetch(`${endpoint}?${params.toString()}`, {
-        method: "GET",
-        mode: "no-cors"  // ← GitHub PagesからのGETなので必要
-      });
-
-      window.location.href = "thanks.html"; // サンクスページへ即遷移
-    }
-  </script>
-</body>
-</html>
+    })
+    .catch(err => {
+      alert("通信エラー: " + err.message);
+    });
+  });
+</script>
