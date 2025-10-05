@@ -16,14 +16,14 @@
 
     fetch("https://script.google.com/macros/s/AKfycbzeOd9bQnNyah1eukOkbJOuagTVX6SSxL6ciWdD4jr6n2KHpPU0LneZJa6Vsgeu-xgt/exec", {
       method: "POST",
-      mode: "no-cors", // ← 重要：クロスドメイン制限を回避
+      mode: "no-cors", // ← ★これが重要！
       headers: {
         "Content-Type": "application/json"
       },
       body: JSON.stringify(data)
     })
     .then(() => {
-      // レスポンスは no-cors なので読めないが、送信成功したと仮定して遷移
+      // レスポンスは読み取れないが、成功したと仮定して画面遷移
       window.location.href = "thanks.html";
     })
     .catch(err => {
