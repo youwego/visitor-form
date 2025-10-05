@@ -40,7 +40,6 @@
   </form>
 
   <script>
-    // ここがポイント！
     document.addEventListener("DOMContentLoaded", function () {
       const form = document.getElementById("form");
 
@@ -57,17 +56,16 @@
           return;
         }
 
-        const data = { artist, presale, guest, memo };
+        const formData = new FormData();
+        formData.append("artist", artist);
+        formData.append("presale", presale);
+        formData.append("guest", guest);
+        formData.append("memo", memo);
 
         fetch("https://script.google.com/macros/s/AKfycbzeOd9bQnNyah1eukOkbJOuagTVX6SSxL6ciWdD4jr6n2KHpPU0LneZJa6Vsgeu-xgt/exec", {
           method: "POST",
-          mode: "no-cors",  // GASへのCORS制限回避
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify(data)
+          body: formData
         }).then(() => {
-          // no-corsなのでレスポンスは読めないが、送信成功前提でthanksへ
           window.location.href = "thanks.html";
         }).catch(err => {
           alert("通信エラー: " + err.message);
