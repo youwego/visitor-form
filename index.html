@@ -1,33 +1,45 @@
-<script>
-  document.getElementById("form").addEventListener("submit", function(e) {
-    e.preventDefault();
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <title>来場者フォーム</title>
+</head>
+<body>
+  <h2>フォームテスト</h2>
+  <form id="form">
+    <input type="text" id="artist" placeholder="アーティスト" required><br>
+    <textarea id="presale" placeholder="前売り" required></textarea><br>
+    <textarea id="guest" placeholder="ゲスト" required></textarea><br>
+    <input type="text" id="memo" placeholder="メモ"><br>
+    <button type="submit">送信</button>
+  </form>
 
-    const artist = document.getElementById("artist").value.trim();
-    const presale = document.getElementById("presale").value.trim();
-    const guest = document.getElementById("guest").value.trim();
-    const memo = document.getElementById("memo").value.trim();
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      document.getElementById("form").addEventListener("submit", function (e) {
+        e.preventDefault();
 
-    if (!artist || !presale || !guest) {
-      alert("すべての必須項目を入力してください。");
-      return;
-    }
+        const artist = document.getElementById("artist").value.trim();
+        const presale = document.getElementById("presale").value.trim();
+        const guest = document.getElementById("guest").value.trim();
+        const memo = document.getElementById("memo").value.trim();
 
-    const data = { artist, presale, guest, memo };
+        const data = { artist, presale, guest, memo };
 
-    fetch("https://script.google.com/macros/s/AKfycbzeOd9bQnNyah1eukOkbJOuagTVX6SSxL6ciWdD4jr6n2KHpPU0LneZJa6Vsgeu-xgt/exec", {
-      method: "POST",
-      mode: "no-cors", // ← これが超重要
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(data)
-    })
-    .then(() => {
-      // no-cors なのでレスポンスは読めない → 成功前提でthanksへ
-      window.location.href = "thanks.html";
-    })
-    .catch(err => {
-      alert("通信エラー: " + err.message);
+        fetch("https://script.google.com/macros/s/AKfycbzeOd9bQnNyah1eukOkbJOuagTVX6SSxL6ciWdD4jr6n2KHpPU0LneZJa6Vsgeu-xgt/exec", {
+          method: "POST",
+          mode: "no-cors",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(data)
+        }).then(() => {
+          window.location.href = "thanks.html";
+        }).catch(err => {
+          alert("通信エラー: " + err.message);
+        });
+      });
     });
-  });
-</script>
+  </script>
+</body>
+</html>
