@@ -3,20 +3,48 @@
 <head>
   <meta charset="UTF-8" />
   <title>来場者フォーム</title>
+  <style>
+    body { font-family: sans-serif; padding: 30px; }
+    label { display: block; margin-top: 20px; font-weight: bold; }
+    input, textarea, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      font-size: 16px;
+    }
+    button {
+      background-color: #008cba;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    h2 { margin-bottom: 20px; }
+  </style>
 </head>
 <body>
-  <h2>フォームテスト</h2>
+  <h2>来場者情報 登録フォーム</h2>
   <form id="form">
-    <input type="text" id="artist" placeholder="アーティスト" required><br>
-    <textarea id="presale" placeholder="前売り" required></textarea><br>
-    <textarea id="guest" placeholder="ゲスト" required></textarea><br>
-    <input type="text" id="memo" placeholder="メモ"><br>
-    <button type="submit">送信</button>
+    <label for="artist">アーティスト名（必須）</label>
+    <input type="text" id="artist" required />
+
+    <label for="presale">前売り（改行またはカンマ区切り）</label>
+    <textarea id="presale" rows="3" required></textarea>
+
+    <label for="guest">ゲスト（改行またはカンマ区切り）</label>
+    <textarea id="guest" rows="3" required></textarea>
+
+    <label for="memo">備考（任意）</label>
+    <input type="text" id="memo" />
+
+    <button type="submit">送信する</button>
   </form>
 
   <script>
+    // ここがポイント！
     document.addEventListener("DOMContentLoaded", function () {
-      document.getElementById("form").addEventListener("submit", function (e) {
+      const form = document.getElementById("form");
+
+      form.addEventListener("submit", function (e) {
         e.preventDefault();
 
         const artist = document.getElementById("artist").value.trim();
@@ -24,16 +52,22 @@
         const guest = document.getElementById("guest").value.trim();
         const memo = document.getElementById("memo").value.trim();
 
+        if (!artist || !presale || !guest) {
+          alert("すべての必須項目を入力してください。");
+          return;
+        }
+
         const data = { artist, presale, guest, memo };
 
         fetch("https://script.google.com/macros/s/AKfycbzeOd9bQnNyah1eukOkbJOuagTVX6SSxL6ciWdD4jr6n2KHpPU0LneZJa6Vsgeu-xgt/exec", {
           method: "POST",
-          mode: "no-cors",
+          mode: "no-cors",  // GASへのCORS制限回避
           headers: {
             "Content-Type": "application/json"
           },
           body: JSON.stringify(data)
         }).then(() => {
+          // no-corsなのでレスポンスは読めないが、送信成功前提でthanksへ
           window.location.href = "thanks.html";
         }).catch(err => {
           alert("通信エラー: " + err.message);
