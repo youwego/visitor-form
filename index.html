@@ -16,14 +16,14 @@
 
     fetch("https://script.google.com/macros/s/AKfycbzeOd9bQnNyah1eukOkbJOuagTVX6SSxL6ciWdD4jr6n2KHpPU0LneZJa6Vsgeu-xgt/exec", {
       method: "POST",
-      mode: "no-cors", // ← CORS制限のため必須
+      mode: "no-cors", // ← これを忘れると通信エラーになります
       headers: {
         "Content-Type": "application/json"
       },
       body: JSON.stringify(data)
     })
     .then(() => {
-      // レスポンスを読まずに成功扱い
+      // 成功時はレスポンス見ずにthanks.htmlへ
       window.location.href = "thanks.html";
     })
     .catch(err => {
