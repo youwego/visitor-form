@@ -1,3 +1,4 @@
+<!-- github版 index.html -->
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -64,15 +65,11 @@
 
         fetch("https://script.google.com/macros/s/AKfycbzuvVT9UP8iRNA-rYZrjRORSzPYdZUyzBXH3f70Uzjx3xPdLRfe5S5M3LZ326hdg-rb/exec", {
           method: "POST",
+          mode: "no-cors", // ← ここを追加！
           body: formData
         })
-        .then(res => res.text())
-        .then(res => {
-          if (res === "success") {
-            window.location.href = "thanks.html";
-          } else {
-            alert("送信エラー: " + res);
-          }
+        .then(() => {
+          window.location.href = "thanks.html";  // 成功時に遷移
         })
         .catch(err => {
           alert("通信エラー: " + err.message);
