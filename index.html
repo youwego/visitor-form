@@ -56,21 +56,22 @@
           return;
         }
 
-        const data = { artist, presale, guest, memo };
+        const formData = new FormData();
+        formData.append("artist", artist);
+        formData.append("presale", presale);
+        formData.append("guest", guest);
+        formData.append("memo", memo);
 
         fetch("https://script.google.com/macros/s/AKfycbzuvVT9UP8iRNA-rYZrjRORSzPYdZUyzBXH3f70Uzjx3xPdLRfe5S5M3LZ326hdg-rb/exec", {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify(data)
+          body: formData
         })
-        .then(res => res.json())
+        .then(res => res.text())
         .then(res => {
-          if (res.status === "success") {
+          if (res === "success") {
             window.location.href = "thanks.html";
           } else {
-            alert("送信エラー: " + res.message);
+            alert("送信エラー: " + res);
           }
         })
         .catch(err => {
