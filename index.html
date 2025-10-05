@@ -63,18 +63,26 @@ document.addEventListener("DOMContentLoaded", function () {
     formData.append("guest", guest);
     formData.append("memo", memo);
 
-    fetch("https://script.google.com/macros/s/AKfycbxHxVlelQKfv2L-zf4d9cBT-0BPerbpGfJNl4A4hbx-vtXL_8OBo3q-IUubTbSGBnEy/exec", {
-      method: "POST",
-      mode: "no-cors", // これ必須
-      body: formData
-    })
-    .then(() => {
-      // no-corsなのでレスポンスは読めないが送信はできる
-      window.location.href = "thanks.html";
-    })
-    .catch(err => {
-      alert("通信エラー: " + err.message);
-    });
+    // JSONで送信（FormDataやno-corsは使わない！）
+fetch("https://script.google.com/macros/s/AKfycbxHxVlelQKfv2L-zf4d9cBT-0BPerbpGfJNl4A4hbx-vtXL_8OBo3q-IUubTbSGBnEy/exec", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    artist: artist,
+    presale: presale,
+    guest: guest,
+    memo: memo
+  })
+})
+.then(response => response.text())
+.then(() => {
+  window.location.href = "thanks.html";
+})
+.catch(err => {
+  alert("通信エラー: " + err.message);
+});
   });
 });
 </script>
