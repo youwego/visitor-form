@@ -63,9 +63,12 @@
         formData.append("memo", memo);
 
         fetch("https://script.google.com/macros/s/AKfycbzuvVT9UP8iRNA-rYZrjRORSzPYdZUyzBXH3f70Uzjx3xPdLRfe5S5M3LZ326hdg-rb/exec", {
-          method: "POST",
-          body: formData
-        })
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify(data)
+})
         .then(res => res.text())
         .then(res => {
           if (res === "success") {
