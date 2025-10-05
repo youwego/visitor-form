@@ -40,38 +40,39 @@
   </form>
 
   <script>
-  document.addEventListener("DOMContentLoaded", function () {
-    const form = document.getElementById("form");
+    document.addEventListener("DOMContentLoaded", function () {
+      const form = document.getElementById("form");
 
-    form.addEventListener("submit", function (e) {
-      e.preventDefault();
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
 
-      const artist = document.getElementById("artist").value.trim();
-      const presale = document.getElementById("presale").value.trim();
-      const guest = document.getElementById("guest").value.trim();
-      const memo = document.getElementById("memo").value.trim();
+        const artist = document.getElementById("artist").value.trim();
+        const presale = document.getElementById("presale").value.trim();
+        const guest = document.getElementById("guest").value.trim();
+        const memo = document.getElementById("memo").value.trim();
 
-      if (!artist || !presale || !guest) {
-        alert("すべての必須項目を入力してください。");
-        return;
-      }
+        if (!artist || !presale || !guest) {
+          alert("すべての必須項目を入力してください。");
+          return;
+        }
 
-      const formData = new FormData();
-      formData.append("artist", artist);
-      formData.append("presale", presale);
-      formData.append("guest", guest);
-      formData.append("memo", memo);
+        // FormDataで送信
+        const formData = new FormData();
+        formData.append("artist", artist);
+        formData.append("presale", presale);
+        formData.append("guest", guest);
+        formData.append("memo", memo);
 
-      fetch("https://script.google.com/macros/s/AKfycbzeOd9bQnNyah1eukOkbJOuagTVX6SSxL6ciWdD4jr6n2KHpPU0LneZJa6Vsgeu-xgt/exec", {
-        method: "POST",
-        body: formData
-      }).then(() => {
-        window.location.href = "thanks.html";
-      }).catch(err => {
-        alert("通信エラー: " + err.message);
+        fetch("https://script.google.com/macros/s/AKfycbzuvVT9UP8iRNA-rYZrjRORSzPYdZUyzBXH3f70Uzjx3xPdLRfe5S5M3LZ326hdg-rb/exec", {
+          method: "POST",
+          body: formData
+        }).then(() => {
+          window.location.href = "thanks.html";
+        }).catch(err => {
+          alert("通信エラー: " + err.message);
+        });
       });
     });
-  });
-</script>
+  </script>
 </body>
 </html>
