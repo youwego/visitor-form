@@ -40,45 +40,43 @@
   </form>
 
   <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      const form = document.getElementById("form");
+document.addEventListener("DOMContentLoaded", function () {
+  const form = document.getElementById("form");
 
-      form.addEventListener("submit", function (e) {
-        e.preventDefault();
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
 
-        const artist = document.getElementById("artist").value.trim();
-        const presale = document.getElementById("presale").value.trim();
-        const guest = document.getElementById("guest").value.trim();
-        const memo = document.getElementById("memo").value.trim();
+    const artist = document.getElementById("artist").value.trim();
+    const presale = document.getElementById("presale").value.trim();
+    const guest = document.getElementById("guest").value.trim();
+    const memo = document.getElementById("memo").value.trim();
 
-        if (!artist || !presale || !guest) {
-          alert("すべての必須項目を入力してください。");
-          return;
-        }
+    if (!artist || !presale || !guest) {
+      alert("すべての必須項目を入力してください。");
+      return;
+    }
 
-        const formData = new FormData();
-        formData.append("artist", artist);
-        formData.append("presale", presale);
-        formData.append("guest", guest);
-        formData.append("memo", memo);
+    // FormDataを使用
+    const formData = new FormData();
+    formData.append("artist", artist);
+    formData.append("presale", presale);
+    formData.append("guest", guest);
+    formData.append("memo", memo);
 
-        fetch("https://script.google.com/macros/s/AKfycbxHxVlelQKfv2L-zf4d9cBT-0BPerbpGfJNl4A4hbx-vtXL_8OBo3q-IUubTbSGBnEy/exec", {
-          method: "POST",
-          body: formData
-        })
-        .then(res => res.text())
-        .then(res => {
-          if (res === "success") {
-            window.location.href = "thanks.html";  // 完了画面に遷移
-          } else {
-            alert("送信エラー: " + res);
-          }
-        })
-        .catch(err => {
-          alert("通信エラー: " + err.message);
-        });
-      });
+    fetch("https://script.google.com/macros/s/AKfycbxHxVlelQKfv2L-zf4d9cBT-0BPerbpGfJNl4A4hbx-vtXL_8OBo3q-IUubTbSGBnEy/exec", {
+      method: "POST",
+      mode: "no-cors", // これ必須
+      body: formData
+    })
+    .then(() => {
+      // no-corsなのでレスポンスは読めないが送信はできる
+      window.location.href = "thanks.html";
+    })
+    .catch(err => {
+      alert("通信エラー: " + err.message);
     });
-  </script>
+  });
+});
+</script>
 </body>
 </html>
