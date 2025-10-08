@@ -50,41 +50,49 @@
   </form>
 
   <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      const form = document.getElementById("form");
+  document.addEventListener("DOMContentLoaded", function () {
+    const form = document.getElementById("form");
 
-      form.addEventListener("submit", function (e) {
-        e.preventDefault();
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
 
-        const artist = document.getElementById("artist").value.trim();
-        const presale = document.getElementById("presale").value.trim();
-        const guest = document.getElementById("guest").value.trim();
-        const memo = document.getElementById("memo").value.trim();
+      const artist = document.getElementById("artist").value.trim();
+      const presale = document.getElementById("presale").value.trim();
+      const guest = document.getElementById("guest").value.trim();
+      const memo = document.getElementById("memo").value.trim();
 
-        if (!artist || !presale || !guest) {
-          alert("すべての必須項目を入力してください。");
-          return;
-        }
+      if (!artist || !presale || !guest) {
+        alert("すべての必須項目を入力してください。");
+        return;
+      }
 
-        const formData = new FormData();
-        formData.append("artist", artist);
-        formData.append("presale", presale);
-        formData.append("guest", guest);
-        formData.append("memo", memo);
+      const jsonData = {
+        artist: artist,
+        presale: presale,
+        guest: guest,
+        memo: memo
+      };
 
-        fetch("https://script.google.com/macros/s/AKfycbxHxVlelQKfv2L-zf4d9cBT-0BPerbpGfJNl4A4hbx-vtXL_8OBo3q-IUubTbSGBnEy/exec", {
-          method: "POST",
-          mode: "no-cors",
-          body: formData
-        })
-        .then(() => {
+      fetch("https://script.google.com/macros/s/AKfycbxHxVlelQKfv2L-zf4d9cBT-0BPerbpGfJNl4A4hbx-vtXL_8OBo3q-IUubTbSGBnEy/exec", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(jsonData)
+      })
+      .then(response => response.text())
+      .then(text => {
+        if (text === "success") {
           window.location.href = "thanks.html";
-        })
-        .catch(err => {
-          alert("通信エラー: " + err.message);
-        });
+        } else {
+          alert("サーバーエラー: " + text);
+        }
+      })
+      .catch(err => {
+        alert("通信エラー: " + err.message);
       });
     });
-  </script>
+  });
+</script>
 </body>
 </html>
