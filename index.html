@@ -56,26 +56,19 @@
           return;
         }
 
-        // JSON形式で送信
+        const formData = new FormData();
+        formData.append("artist", artist);
+        formData.append("presale", presale);
+        formData.append("guest", guest);
+        formData.append("memo", memo);
+
         fetch("https://script.google.com/macros/s/AKfycbxHxVlelQKfv2L-zf4d9cBT-0BPerbpGfJNl4A4hbx-vtXL_8OBo3q-IUubTbSGBnEy/exec", {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            artist: artist,
-            presale: presale,
-            guest: guest,
-            memo: memo
-          })
+          mode: "no-cors",  // ← CORS制限を回避
+          body: formData
         })
-        .then(res => res.text())
-        .then(res => {
-          if (res === "success") {
-            window.location.href = "thanks.html"; // 任意で完了画面へ
-          } else {
-            alert("送信エラー: " + res);
-          }
+        .then(() => {
+          window.location.href = "thanks.html"; // 送信完了後に移動
         })
         .catch(err => {
           alert("通信エラー: " + err.message);
