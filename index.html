@@ -4,8 +4,15 @@
   <meta charset="UTF-8" />
   <title>来場者情報 登録フォーム</title>
   <style>
-    body { font-family: sans-serif; padding: 30px; }
-    label { display: block; margin-top: 20px; font-weight: bold; }
+    body {
+      font-family: sans-serif;
+      padding: 30px;
+    }
+    label {
+      display: block;
+      margin-top: 20px;
+      font-weight: bold;
+    }
     input, textarea, button {
       width: 100%;
       padding: 10px;
@@ -17,24 +24,27 @@
       color: white;
       border: none;
       cursor: pointer;
+      margin-top: 20px;
     }
-    h2 { margin-bottom: 20px; }
+    h2 {
+      margin-bottom: 20px;
+    }
   </style>
 </head>
 <body>
   <h2>来場者情報 登録フォーム</h2>
   <form id="form">
     <label for="artist">アーティスト名（必須）</label>
-    <input type="text" id="artist" required />
+    <input type="text" id="artist" name="artist" required />
 
     <label for="presale">前売り（改行またはカンマ区切り）</label>
-    <textarea id="presale" rows="3" required></textarea>
+    <textarea id="presale" name="presale" rows="3" required></textarea>
 
     <label for="guest">ゲスト（改行またはカンマ区切り）</label>
-    <textarea id="guest" rows="3" required></textarea>
+    <textarea id="guest" name="guest" rows="3" required></textarea>
 
     <label for="memo">備考（任意）</label>
-    <input type="text" id="memo" />
+    <input type="text" id="memo" name="memo" />
 
     <button type="submit">送信する</button>
   </form>
@@ -64,11 +74,11 @@
 
         fetch("https://script.google.com/macros/s/AKfycbxHxVlelQKfv2L-zf4d9cBT-0BPerbpGfJNl4A4hbx-vtXL_8OBo3q-IUubTbSGBnEy/exec", {
           method: "POST",
-          mode: "no-cors",  // ← CORS制限を回避
+          mode: "no-cors",
           body: formData
         })
         .then(() => {
-          window.location.href = "thanks.html"; // 送信完了後に移動
+          window.location.href = "thanks.html";
         })
         .catch(err => {
           alert("通信エラー: " + err.message);
